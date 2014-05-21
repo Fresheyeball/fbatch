@@ -5,7 +5,10 @@ import Data.String.Utils
 import System.Environment(getArgs)
 import System.Directory(renameFile, getDirectoryContents)
 
+pathsContaining :: [String] -> String -> [String]
 pathsContaining paths prefix = filter (isInfixOf prefix) paths
+
+pathsRejected   :: [String] -> String -> [String]
 pathsRejected   paths reject = map (replace reject "") paths
 
 main :: IO()
