@@ -12,18 +12,15 @@ pathsReject     :: String -> [String] -> [String]
 pathsReject r ps = map (replace r "") ps
 
 pathsRejected   :: String -> [String] -> [String]
-pathsRejected = pathsReject >> pathsContaining
+pathsRejected r ps = pathsReject r $ pathsContaining r ps
+--pathsRejected = pathsReject >> pathsContaining
 
 addBaseToPaths  :: String -> [String] -> [String]
 addBaseToPaths b p = map (\x -> b ++ "/" ++ x) p
 
---getDeltas b r ps = do
---  let prefixBase xs = map (\x -> b ++ x) xs
---  let origin = prefixBase $ pathsContaining r ps
---  let deltas = prefixBase $ pathsRejected r ps
---  putStrLn $ show origin
---  return zip origin deltas
-
+getDeltas b r ps = let o = addBaseToPaths b $ pathsContaining r ps
+                       d = addBaseToPaths b $ pathsRejected   r ps
+                       in zip o d
 
 
 main :: IO()
@@ -33,9 +30,8 @@ main = do
   let reject    = last args
 
   files <- getDirectoryContents directory
-  let filesRenamed = addBaseToPaths directory $ pathsRejected reject files
-
-  putStrLn $ show $ pathsRejected reject files
+  let filesRenamed = getDeltas directory reject files
+  putStrLn (show filesRenamed)
 
   --renameFile old new
   --putStrLn $ "File " ++ old ++ " was renamed to " ++ new
