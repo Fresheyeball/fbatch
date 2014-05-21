@@ -37,4 +37,4 @@ main = do
   files <- getDirectoryContents directory
   let count     = show $ length $ pathsContaining reject files
   renameFromPairs $ getDeltas directory reject files
-  putStrLn (count ++ " files renamed")
+  putStrLn $ count ++ " files renamed"
