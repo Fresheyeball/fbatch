@@ -8,10 +8,11 @@ import System.Directory(renameFile, getDirectoryContents)
 pathsContaining :: String -> [String] -> [String]
 pathsContaining prefix paths = filter (isInfixOf prefix) paths
 
-pathsRejected   :: String -> [String] -> [String]
-pathsRejected   reject paths = map (replace reject "") paths
+pathsReject     :: String -> [String] -> [String]
+pathsReject     reject paths = map (replace reject "") paths
 
---pathsCR paths reject = 
+pathsRejected   :: String -> [String] -> [String]
+pathsRejected   reject paths = pathsReject reject (pathsContaining reject paths)
 
 main :: IO()
 main = do
@@ -20,10 +21,9 @@ main = do
   let reject    = last args
 
   files <- getDirectoryContents directory
-  let filesToRename = pathsContaining reject files 
-  let filesRenamed  = pathsRejected reject filesToRename 
+  let filesRenamed  = pathsRejected reject files
 
-  putStrLn $ (show filesToRename) ++ (show filesRenamed)
+  putStrLn $ show filesRenamed
 
   --renameFile old new
   --putStrLn $ "File " ++ old ++ " was renamed to " ++ new
