@@ -22,8 +22,8 @@ getDeltas b r ps = let o = addBaseToPaths b $ pathsContaining r ps
                        d = addBaseToPaths b $ pathsRejected   r ps
                        in zip o d
 
-renameFromPairs [] = putStrLn "files renamed"
-
+renameFromPairs :: [(FilePath, FilePath)] -> IO()
+renameFromPairs [] = return ()
 renameFromPairs (x:xs) = do
   renameFile (fst x) (snd x)
   renameFromPairs xs
@@ -35,4 +35,6 @@ main = do
   let reject    = last args
 
   files <- getDirectoryContents directory
+  let count     = show $ length $ pathsContaining reject files
   renameFromPairs $ getDeltas directory reject files
+  putStrLn (count ++ " files renamed")
