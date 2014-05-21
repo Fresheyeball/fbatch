@@ -5,11 +5,13 @@ import Data.String.Utils
 import System.Environment(getArgs)
 import System.Directory(renameFile, getDirectoryContents)
 
-pathsContaining :: [String] -> String -> [String]
-pathsContaining paths prefix = filter (isInfixOf prefix) paths
+pathsContaining :: String -> [String] -> [String]
+pathsContaining prefix paths = filter (isInfixOf prefix) paths
 
-pathsRejected   :: [String] -> String -> [String]
-pathsRejected   paths reject = map (replace reject "") paths
+pathsRejected   :: String -> [String] -> [String]
+pathsRejected   reject paths = map (replace reject "") paths
+
+--pathsCR paths reject = 
 
 main :: IO()
 main = do
@@ -18,8 +20,8 @@ main = do
   let reject    = last args
 
   files <- getDirectoryContents directory
-  let filesToRename = pathsContaining files reject
-  let filesRenamed  = pathsRejected filesToRename reject
+  let filesToRename = pathsContaining reject files 
+  let filesRenamed  = pathsRejected reject filesToRename 
 
   putStrLn $ (show filesToRename) ++ (show filesRenamed)
 
