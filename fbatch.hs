@@ -13,15 +13,20 @@ pathsReject r ps = map (replace r "") ps
 
 pathsRejected   :: String -> [String] -> [String]
 pathsRejected r ps = pathsReject r $ pathsContaining r ps
---pathsRejected = pathsReject >> pathsContaining
 
 addBaseToPaths  :: String -> [String] -> [String]
 addBaseToPaths b p = map (\x -> b ++ "/" ++ x) p
 
+getDeltas       :: String -> String -> [String] -> [(String, String)]
 getDeltas b r ps = let o = addBaseToPaths b $ pathsContaining r ps
                        d = addBaseToPaths b $ pathsRejected   r ps
                        in zip o d
 
+renameFromPairs [] = putStrLn "files renamed"
+
+renameFromPairs (x:xs) = do
+  renameFile (fst x) (snd x)
+  renameFromPairs xs
 
 main :: IO()
 main = do
@@ -30,8 +35,4 @@ main = do
   let reject    = last args
 
   files <- getDirectoryContents directory
-  let filesRenamed = getDeltas directory reject files
-  putStrLn (show filesRenamed)
-
-  --renameFile old new
-  --putStrLn $ "File " ++ old ++ " was renamed to " ++ new
+  renameFromPairs $ getDeltas directory reject files
