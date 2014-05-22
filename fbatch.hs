@@ -1,7 +1,7 @@
 module Main (main) where
 
 import Data.List(isInfixOf)
-import Data.String.Utils
+import Data.String.Utils(replace)
 import System.Environment(getArgs)
 import System.Directory(renameFile, getDirectoryContents)
 
@@ -12,7 +12,7 @@ pathsReject     :: String -> [String] -> [String]
 pathsReject r ps = map (replace r "") ps
 
 pathsRejected   :: String -> [String] -> [String]
-pathsRejected r ps = pathsReject r $ pathsContaining r ps
+pathsRejected r = (pathsReject r) . (pathsContaining r)
 
 addBaseToPaths  :: String -> [String] -> [String]
 addBaseToPaths b p = map (\x -> b ++ "/" ++ x) p
@@ -25,16 +25,15 @@ getDeltas b r ps = let o = addBaseToPaths b $ pathsContaining r ps
 renameFromPairs :: [(FilePath, FilePath)] -> IO()
 renameFromPairs [] = return ()
 renameFromPairs (x:xs) = do
-  renameFile (fst x) (snd x)
+  (uncurry renameFile) x
   renameFromPairs xs
 
 main :: IO()
 main = do
-  args <- getArgs
-  let directory = head args
-  let reject    = last args
+  [directory, reject] <- getArgs
+  files               <- getDirectoryContents directory
 
-  files <- getDirectoryContents directory
-  let count     = show $ length $ pathsContaining reject files
   renameFromPairs $ getDeltas directory reject files
-  putStrLn $ count ++ " files renamed"
+
+  let count = length $ pathsContaining reject files
+  putStrLn $ (show count) ++ " files renamed"
