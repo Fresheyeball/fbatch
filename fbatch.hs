@@ -32,8 +32,6 @@ main :: IO()
 main = do
   [directory, reject] <- getArgs
   files               <- getDirectoryContents directory
-
-  renameFromPairs $ getDeltas directory reject files
-
-  let count = length $ pathsContaining reject files
-  putStrLn $ (show count) ++ " files renamed"
+  let deltas = getDeltas directory reject files
+  renameFromPairs deltas
+  putStrLn $ (show . length $ deltas) ++ " files renamed"
