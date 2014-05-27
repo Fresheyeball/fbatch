@@ -7,9 +7,13 @@ import System.FilePath((</>))
 import System.Console.ANSI
 import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
 
+replaceItoken :: String -> String -> (String, Int) -> String
+replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
+                            in replace r t o 
+
 getDeltas :: FilePath -> String -> [String] -> [(String, String)]
 getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
-                        d = map (replace r r') o
+                        d = map (replaceItoken r r') (zip o [0..])
                         in zip o d
 
 rename :: FilePath -> FilePath -> IO()
@@ -38,6 +42,6 @@ main = do
   files <- getDirectoryContents directory
 
   let deltas = getDeltas reject replacement files
-  
+
   mapM_ (renameDeltaInBase directory) deltas
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"
