@@ -4,6 +4,7 @@ import Data.List(isInfixOf)
 import Data.String.Utils(replace)
 import System.Environment(getArgs)
 import System.FilePath((</>))
+import System.Console.ANSI
 import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
 
 getDeltas :: FilePath -> String -> [String] -> [(String, String)]
@@ -17,9 +18,19 @@ rename x y = do
   if isDir
   then renameDirectory x y else renameFile x y
 
+putStrInColor :: String -> Color -> IO()
+putStrInColor x y = do
+  setSGR [ SetConsoleIntensity NormalIntensity 
+         , SetColor Foreground Vivid y]
+  putStr x
+  setSGR []
+
 renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO ()
 renameDeltaInBase b (o,d) = do
-  putStrLn ("renaming: " ++ o ++ " -> " ++ d)
+  putStr "renaming: "
+  (o ++ "\t") `putStrInColor` Blue
+  putStr " -> "
+  (d ++ "\n") `putStrInColor` Blue
   rename (b </> o) (b </> d)
 
 main :: IO()
