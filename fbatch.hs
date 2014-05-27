@@ -20,15 +20,14 @@ rename x y = do
 
 putStrInColor :: String -> Color -> IO()
 putStrInColor s c = do
-  setSGR [ SetConsoleIntensity NormalIntensity 
-         , SetColor Foreground Vivid c]
+  setSGR [SetColor Foreground Vivid c]
   putStr s
   setSGR []
 
-renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO ()
-renameDeltaInBase b (o,d) = do
+renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO()
+renameDeltaInBase b (o, d) = do
   putStr "renaming: "
-  (o ++ "\t") `putStrInColor` Blue
+  (o ++ "\t") `putStrInColor` Yellow
   putStr " -> "
   (d ++ "\n") `putStrInColor` Blue
   rename (b </> o) (b </> d)
