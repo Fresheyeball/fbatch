@@ -7,11 +7,13 @@ import System.FilePath((</>))
 import System.Console.ANSI
 import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
 
-replaceItoken :: String -> String -> (String, Int) -> String
+type FileName = String
+
+replaceItoken :: String -> String -> (FileName, Int) -> String
 replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
                             in replace r t o 
 
-getDeltas :: FilePath -> String -> [String] -> [(String, String)]
+getDeltas :: String -> String -> [FileName] -> [(FileName, FileName)]
 getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
                         d = map (replaceItoken r r') (zip o [0..])
                         in zip o d
@@ -28,7 +30,7 @@ putStrInColor s c = do
   putStr s
   setSGR []
 
-renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO()
+renameDeltaInBase :: FilePath -> (FileName, FileName) -> IO()
 renameDeltaInBase b (o, d) = do
   putStr "renaming: "
   (o ++ "\t") `putStrInColor` Yellow
