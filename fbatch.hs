@@ -19,10 +19,10 @@ rename x y = do
   then renameDirectory x y else renameFile x y
 
 putStrInColor :: String -> Color -> IO()
-putStrInColor x y = do
+putStrInColor s c = do
   setSGR [ SetConsoleIntensity NormalIntensity 
-         , SetColor Foreground Vivid y]
-  putStr x
+         , SetColor Foreground Vivid c]
+  putStr s
   setSGR []
 
 renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO ()
@@ -37,6 +37,8 @@ main :: IO()
 main = do
   [reject, replacement, directory] <- getArgs
   files <- getDirectoryContents directory
+
   let deltas = getDeltas reject replacement files
+  
   mapM_ (renameDeltaInBase directory) deltas
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"
