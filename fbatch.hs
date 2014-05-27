@@ -39,4 +39,4 @@ main = do
   files <- getDirectoryContents directory
   let deltas = getDeltas reject replacement files
   mapM_ (renameDeltaInBase directory) deltas
-  putStrLn $ (show . length $ deltas) ++ " files renamed"
+  putStrLn $ (show . length $ deltas) ++ " <- files renamed"
