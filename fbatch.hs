@@ -7,12 +7,13 @@ import System.FilePath((</>))
 import System.Console.ANSI
 import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
 
-replaceItoken :: (String, Int) -> String
-replaceItoken (r, i) = replace "#{i}" (show i) r
+replaceItoken :: String -> String -> (String, Int) -> String
+replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
+                            in replace r t o 
 
 getDeltas :: FilePath -> String -> [String] -> [(String, String)]
 getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
-                        d = map ((replace r r') . replaceItoken) (zip o [0..])
+                        d = map (replaceItoken r r') (zip o [0..])
                         in zip o d
 
 rename :: FilePath -> FilePath -> IO()
