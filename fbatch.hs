@@ -4,20 +4,28 @@ import Data.List(isInfixOf)
 import Data.String.Utils(replace)
 import System.Environment(getArgs)
 import System.FilePath((</>))
-import System.Directory(renameFile, getDirectoryContents)
+import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
 
-getDeltas :: String -> [String] -> [(String,String)]
-getDeltas r ps = let o = filter (r `isInfixOf`) ps
-                     d = map (replace r "") o
-                    in zip o d
+getDeltas :: FilePath -> String -> [String] -> [(String, String)]
+getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
+                        d = map (replace r r') o
+                        in zip o d
 
-renameDeltaInBase :: String -> (String, String) -> IO ()
-renameDeltaInBase b (o,d) = renameFile (b </> o) (b </> d)
+rename :: FilePath -> FilePath -> IO()
+rename x y = do   
+  isDir <- doesDirectoryExist x
+  if isDir
+  then renameDirectory x y else renameFile x y
+
+renameDeltaInBase :: FilePath -> (FilePath, FilePath) -> IO ()
+renameDeltaInBase b (o,d) = do
+  putStrLn ("renaming: " ++ o ++ " -> " ++ d)
+  rename (b </> o) (b </> d)
 
 main :: IO()
 main = do
-  [directory, reject] <- getArgs
-  files               <- getDirectoryContents directory
-  let deltas = getDeltas reject files
+  [reject, replacement, directory] <- getArgs
+  files <- getDirectoryContents directory
+  let deltas = getDeltas reject replacement files
   mapM_ (renameDeltaInBase directory) deltas
   putStrLn $ (show . length $ deltas) ++ " files renamed"
