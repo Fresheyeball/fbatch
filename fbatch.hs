@@ -6,6 +6,7 @@ import System.Environment(getArgs)
 import System.FilePath((</>))
 import System.Console.ANSI
 import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
+import qualified Control.Monad.Parallel as P
 
 type FileName = String
 
@@ -16,16 +17,17 @@ replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
 getDeltas :: String -> String -> [FileName] -> [(FileName, FileName)]
 getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
                         d = map (replaceItoken r r') (zip o [0..])
-                        in zip o d
+                    in zip o d
 
 rename :: FilePath -> FilePath -> IO()
-rename x y = do   
-  isDir <- doesDirectoryExist x
-  if isDir
-  then renameDirectory x y else renameFile x y
+rename x y = do
+  d <- doesDirectoryExist x
+  if d
+  then renameDirectory x y
+  else renameFile x y
 
 putStrInColor :: String -> Color -> IO()
-putStrInColor s c = do
+s `putStrInColor` c = do
   setSGR [SetColor Foreground Vivid c]
   putStr s
   setSGR []
@@ -45,5 +47,5 @@ main = do
 
   let deltas = getDeltas reject replacement files
 
-  mapM_ (renameDeltaInBase directory) deltas
+  P.mapM (renameDeltaInBase directory) deltas
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"
