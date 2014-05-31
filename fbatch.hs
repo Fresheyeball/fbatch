@@ -26,26 +26,27 @@ rename x y = do
   then renameDirectory x y
   else renameFile x y
 
-putStrInColor :: String -> Color -> IO()
-s `putStrInColor` c = do
+putInColor :: String -> Color -> IO()
+s `putInColor` c = do
   setSGR [SetColor Foreground Vivid c]
   putStr s
   setSGR []
 
-renameDeltaInBase :: FilePath -> (FileName, FileName) -> IO()
-renameDeltaInBase b (o, d) = do
+printRename :: FileName -> FileName -> IO()
+printRename o d = do
   putStr "renaming: "
-  (o ++ "\t") `putStrInColor` Yellow
+  (o ++ "\t") `putInColor` Yellow
   putStr " -> "
-  (d ++ "\n") `putStrInColor` Blue
-  rename (b </> o) (b </> d)
+  (d ++ "\n") `putInColor` Blue
 
 main :: IO()
 main = do
-  [reject, replacement, directory] <- getArgs
-  files <- getDirectoryContents directory
+  [reject, replacement, dir] <- getArgs
+  files                      <- getDirectoryContents dir
 
   let deltas = getDeltas reject replacement files
 
-  P.mapM (renameDeltaInBase directory) deltas
+  P.mapM (\(o, d) -> rename (dir </> o) (dir </> d)) deltas
+  mapM_ (uncurry printRename) deltas
+  
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"
