@@ -32,8 +32,8 @@ s `putInColor` c = do
   putStr s
   setSGR []
 
-printRename :: FileName -> FileName -> IO()
-printRename o d = do
+printRename :: (FileName, FileName) -> IO()
+printRename (o, d) = do
   putStr "renaming: "
   (o ++ "\t") `putInColor` Yellow
   putStr " -> "
@@ -47,6 +47,6 @@ main = do
   let deltas = getDeltas reject replacement files
 
   P.mapM (\(o, d) -> rename (dir </> o) (dir </> d)) deltas
-  mapM_ (uncurry printRename) deltas
+  mapM_ printRename deltas
   
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"
