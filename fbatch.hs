@@ -1,4 +1,4 @@
-module Main (main) where
+module Fbatch where
 
 import Data.List(isInfixOf)
 import Data.String.Utils(replace)
@@ -39,8 +39,8 @@ printRename (o, d) = do
   putStr " -> "
   (d ++ "\n") `putInColor` Blue
 
-main :: IO()
-main = do
+renameFromCli :: IO()
+renameFromCli = do
   [reject, replacement, dir] <- getArgs
   files                      <- getDirectoryContents dir
 
