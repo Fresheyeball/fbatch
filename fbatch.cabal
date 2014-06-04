@@ -15,7 +15,11 @@ build-type:          Simple
 cabal-version:       >=1.8
 
 executable fbatch
-  -- main-is:             
+  main-is:             fbatch.hs
   -- other-modules:       
-  build-depends:       base ==4.6.*,
-                       MissingH
+  build-depends:       base,
+                       MissingH,
+                       directory,
+                       ansi-terminal,
+                       filepath,
+                       monad-parallel

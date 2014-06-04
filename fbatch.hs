@@ -23,8 +23,8 @@ rename :: FilePath -> FilePath -> IO()
 rename x y = do
   d <- doesDirectoryExist x
   if d
-  then renameDirectory x y
-  else renameFile x y
+    then renameDirectory x y
+    else renameFile x y
 
 putInColor :: String -> Color -> IO()
 s `putInColor` c = do
