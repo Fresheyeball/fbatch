@@ -1,22 +1,23 @@
 name:                fbatch
 version:             0.1.0.0
 synopsis:            "Simple batch file renamer"     
---description:         
 license:             MIT
 license-file:        LICENSE
 author:              Isaac
--- maintainer:          
--- copyright:           
--- category:            
 build-type:          Simple
 cabal-version:       >=1.8
 
 executable fbatch
   main-is:             fbatch.hs
-  -- other-modules:       
   build-depends:       base,
                        MissingH,
                        directory,
                        ansi-terminal,
                        filepath,
                        monad-parallel
+
+test-suite tests
+  type:                exitcode-stdio-1.0
+  main-is:             fbatch-test.hs
+  build-depends:       base,
+                       hspec
