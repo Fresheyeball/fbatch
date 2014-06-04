@@ -14,6 +14,7 @@ executable fbatch
                        directory,
                        ansi-terminal,
                        filepath,
+                       monad-identity,
                        monad-parallel
 
 test-suite tests
@@ -24,5 +25,6 @@ test-suite tests
                        directory,
                        ansi-terminal,
                        filepath,
+                       monad-identity,
                        monad-parallel,
                        hspec
