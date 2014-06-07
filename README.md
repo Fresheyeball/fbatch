@@ -1,4 +1,4 @@
-![build](https://travis-ci.org/Fresheyeball/fbatch.svg?branch=master)
+[![build](https://travis-ci.org/Fresheyeball/fbatch.svg?branch=master)](https://travis-ci.org/Fresheyeball/fbatch)
 
 This is a simple tool for batch file interactions. Right now it only does some basic renaming. Lets say you have a directory structure like this:
 
