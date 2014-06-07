@@ -14,7 +14,7 @@ executable fbatch
                        directory,
                        ansi-terminal,
                        filepath,
-                       monad-parallel
+                       monad-parallel >= 0.7
 
 test-suite tests
   type:                exitcode-stdio-1.0
@@ -24,5 +24,5 @@ test-suite tests
                        directory,
                        ansi-terminal,
                        filepath,
-                       monad-parallel,
+                       monad-parallel >= 0.7,
                        hspec
