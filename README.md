@@ -1,3 +1,5 @@
+![build](https://travis-ci.org/Fresheyeball/fbatch.svg?branch=master)
+
 This is a simple tool for batch file interactions. Right now it only does some basic renaming. Lets say you have a directory structure like this:
 
 ```
