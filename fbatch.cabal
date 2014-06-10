@@ -32,6 +32,7 @@ Test-Suite tests
   Hs-Source-Dirs:      test
   Type:                exitcode-stdio-1.0
   Main-Is:             MainSpec.hs
+  Ghc-Options:         -Wall -Werror
   Build-Depends:       base,
                        fbatch,
                        MissingH,

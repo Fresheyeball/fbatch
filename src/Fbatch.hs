@@ -10,6 +10,9 @@ import qualified Control.Monad.Parallel as P
 
 type FileName = String
 
+data Rename = RenameDirectory FileName FileName
+            | RenameFile      FileName FileName
+
 replaceItoken :: String -> String -> (FileName, Int) -> String
 replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
                             in replace r t o 
@@ -19,12 +22,16 @@ getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
                         d = map (replaceItoken r r') (zip o [0..])
                     in zip o d
 
-rename :: FilePath -> FilePath -> IO()
-rename x y = do
+getRename :: FilePath -> FilePath -> IO Rename
+getRename x y = do
   d <- doesDirectoryExist x
   if d
-    then renameDirectory x y
-    else renameFile x y
+    then return $ RenameDirectory x y
+    else return $ RenameFile      x y
+
+rename :: Rename -> IO()
+rename (RenameDirectory x y) = renameDirectory x y
+rename (RenameFile      x y) = renameFile      x y
 
 putInColor :: String -> Color -> IO()
 s `putInColor` c = do
@@ -46,7 +53,7 @@ renameFromCli = do
 
   let deltas = getDeltas reject replacement files
 
-  _ <- P.mapM (\(o, d) -> rename (dir </> o) (dir </> d)) deltas
+  _ <- P.mapM (\(o, d) -> rename =<< getRename (dir </> o) (dir </> d)) deltas
   mapM_ printRename deltas
   
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"

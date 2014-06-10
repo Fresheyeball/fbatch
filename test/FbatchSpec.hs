@@ -1,7 +1,6 @@
 module FbatchSpec where
 
 import Test.Hspec
---import Test.QuickCheck
 import Fbatch
 
 fbatchSpec :: Spec
