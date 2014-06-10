@@ -39,18 +39,26 @@ rename (RenameDirectory x y) = renameDirectory x y
 rename (RenameFile      x y) = renameFile      x y
 rename  RenameNothing        = return ()
 
-putInColor :: String -> Color -> IO()
-s `putInColor` c = do
+data Printable = In String Color
+               | Normally String
+
+print' :: Printable -> IO String
+print' (s `In` c) = do
   setSGR [SetColor Foreground Vivid c]
   putStr s
   setSGR []
+  return s
+print' (Normally s) = do 
+  putStr s
+  return s
 
-printRename :: (FileName, FileName) -> IO()
+printRename :: (FileName, FileName) -> IO String
 printRename (o, d) = do
-  putStr "renaming: "
-  (o ++ "\t") `putInColor` Yellow
-  putStr " -> "
-  (d ++ "\n") `putInColor` Blue
+  w <- print' $ Normally "renaming: "
+  x <- print' $ (o ++ "\t") `In` Yellow
+  y <- print' $ Normally " -> "
+  z <- print' $ (d ++ "\n") `In` Blue
+  return $ w ++ x ++ y ++ z
 
 renameFromCli :: IO()
 renameFromCli = do
