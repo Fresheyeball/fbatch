@@ -30,6 +30,8 @@ fbatchSpec = do
       (getRename "fbatch.cabal" "") `shouldReturn` (RenameFile "fbatch.cabal" "")
     it "should return a RenameNothing if its doesn't match" $ do 
       (getRename "sdlfkj" "") `shouldReturn` RenameNothing
+    it "should return a RenameNothing for empty string" $ do 
+      (getRename "" "") `shouldReturn` RenameNothing
 
   describe "printRename" $ do
     it "should have nice colors" $ do
