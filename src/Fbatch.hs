@@ -46,7 +46,7 @@ renameFromCli = do
 
   let deltas = getDeltas reject replacement files
 
-  P.mapM (\(o, d) -> rename (dir </> o) (dir </> d)) deltas
+  _ <- P.mapM (\(o, d) -> rename (dir </> o) (dir </> d)) deltas
   mapM_ printRename deltas
   
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"

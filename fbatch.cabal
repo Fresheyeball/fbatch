@@ -1,28 +1,39 @@
-name:                fbatch
-version:             0.1.0.0
-synopsis:            "Simple batch file renamer"     
-license:             MIT
-license-file:        LICENSE
-author:              Isaac
-build-type:          Simple
-cabal-version:       >=1.8
+Name:                fbatch
+Version:             0.1.0.0
+Synopsis:            "Simple batch file renamer"     
+License:             MIT
+License-File:        LICENSE
+Author:              Isaac
+Build-Type:          Simple
+Cabal-Version:       >=1.8
 
-executable fbatch
-  hs-source-dirs:      src
-  main-is:             Main.hs
-  ghc-options:         -Wall -Werror
-  build-depends:       base,
+Library
+  Hs-Source-Dirs:      src
+  Exposed-Modules:     Fbatch
+  Build-Depends:       base,
                        MissingH,
                        directory,
                        ansi-terminal,
                        filepath,
                        monad-parallel >= 0.7
 
-test-suite tests
-  hs-source-dirs:      test
-  type:                exitcode-stdio-1.0
-  main-is:             test/MainSpec.hs
-  build-depends:       base,
+Executable fbatch
+  Hs-Source-Dirs:      src
+  Main-Is:             Main.hs
+  Ghc-Options:         -Wall -Werror  
+  Build-Depends:       base,
+                       MissingH,
+                       directory,
+                       ansi-terminal,
+                       filepath,
+                       monad-parallel >= 0.7
+
+Test-Suite tests
+  Hs-Source-Dirs:      test
+  Type:                exitcode-stdio-1.0
+  Main-Is:             MainSpec.hs
+  Build-Depends:       base,
+                       fbatch,
                        MissingH,
                        directory,
                        ansi-terminal,
