@@ -55,5 +55,4 @@ renameFromCli = do
 
   _ <- P.mapM (\(o, d) -> rename =<< getRename (dir </> o) (dir </> d)) deltas
   mapM_ printRename deltas
-  
   putStrLn $ (show . length $ deltas) ++ " <- files renamed"

@@ -22,3 +22,6 @@ fbatchSpec = do
       let str  = "accdaaee"
       let str' = replaceItoken r r' (str, 0)
       (getDeltas r r' [str]) `shouldBe` [(str,str')]
+
+  describe "getRemame" $ do
+    it ""
