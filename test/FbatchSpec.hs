@@ -23,5 +23,11 @@ fbatchSpec = do
       let str' = replaceItoken r r' (str, 0)
       (getDeltas r r' [str]) `shouldBe` [(str,str')]
 
-  describe "getRemame" $ do
-    it ""
+  describe "getRename" $ do
+    it "should return a RenameDirectory if its a directory" $ do
+      (getRename "src" "") `shouldReturn` (RenameDirectory "src" "")
+    it "should return a RenameFile if its a file" $ do
+      (getRename "fbatch.cabal" "") `shouldReturn` (RenameFile "fbatch.cabal" "")
+    it "should return a RenameNothing if its doesn't match" $ do 
+      (getRename "sdlfkj" "") `shouldReturn` RenameNothing
+

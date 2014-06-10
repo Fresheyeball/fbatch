@@ -5,13 +5,15 @@ import Data.String.Utils(replace)
 import System.Environment(getArgs)
 import System.FilePath((</>))
 import System.Console.ANSI
-import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist)
+import System.Directory(renameFile, renameDirectory, getDirectoryContents, doesDirectoryExist, doesFileExist)
 import qualified Control.Monad.Parallel as P
 
 type FileName = String
 
 data Rename = RenameDirectory FileName FileName
             | RenameFile      FileName FileName
+            | RenameNothing
+            deriving (Show, Eq)
 
 replaceItoken :: String -> String -> (FileName, Int) -> String
 replaceItoken r r' (o, i) = let t = replace "#{i}" (show i) r'
@@ -25,13 +27,17 @@ getDeltas r r' ps = let o = filter (r `isInfixOf`) ps
 getRename :: FilePath -> FilePath -> IO Rename
 getRename x y = do
   d <- doesDirectoryExist x
-  if d
+  f <- doesFileExist x
+  if d 
     then return $ RenameDirectory x y
-    else return $ RenameFile      x y
+    else if f 
+    then return $ RenameFile      x y
+    else return   RenameNothing
 
 rename :: Rename -> IO()
 rename (RenameDirectory x y) = renameDirectory x y
 rename (RenameFile      x y) = renameFile      x y
+rename  RenameNothing        = return ()
 
 putInColor :: String -> Color -> IO()
 s `putInColor` c = do
